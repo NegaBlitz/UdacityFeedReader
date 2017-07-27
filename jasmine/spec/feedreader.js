@@ -8,7 +8,7 @@
  * since some of these tests may require DOM elements. We want
  * to ensure they don't run until the DOM is ready.
  */
- 'use strict';
+'use strict';
 $(function() {
     /* This is our first test suite - a test suite just contains
     * a related set of tests. This suite is all about the RSS
@@ -70,7 +70,9 @@ $(function() {
 					var menuIcon = $('.menu-icon-link');
 					
 					it('changes visibility when icon is clicked', function() {
+						// Runs when the menu icon is clicked
 						menuIcon.on('click', function() {
+							// If the menu is hidden, then it should appear, if not, then it should disappear.
 							if(document.body.className == 'menu-hidden') {
 								expect(document.body.className).not.toBe('menu-hidden');
 							}
@@ -120,50 +122,37 @@ $(function() {
 				// Content to look for
 				var oldContent, newContent;
 				
-				//Get feed information
-				var feeds = window.allFeeds,
-				numberOfFeeds = feeds.length,
-				numberOfFeedsLoaded = 0,
-				contentChanges = true;
+				// Get feed information
+				var contentChanges = true;
 				
-
 				it('has content change when a new feed is loaded by the loadFeed function', function(done) {
-
-					feeds.forEach(function(feed) {
-						window.loadFeed(feed.id, checkContent);
-					});
 					
-					function checkContent () {
-						numberOfFeedsLoaded++;
+					//The old title of the initial feed
+					oldContent = $(".header-title").html();
+					
+					//Triggers a click
+					$("a[data-id='1']").trigger("click");
+					
+					//Timeouts a little to ensure a change has time to happen, and then checks and compares the old and new together
+					window.setTimeout(function() {
 						
-						// Get old and new material
-						if(!oldContent) {
-							newContent = $('.feed').html();
-							oldContent = true;
-						}
-						else {
-							oldContent = newContent;
-							newContent = $('.feed').html();
-							
-							// Check if they're different
-							if(oldContent === newContent) {
-								contentChanges = false;
-							}
-							else {
-								contentChanges = true;
-							}
-						}
-					}
+						// Gets what should be the new title
+						newContent = $(".header-title").html();
 						
-					//If they aren't, the test fails.
-					if (numberOfFeedsLoaded >= numberOfFeeds) {
+						// Runs a check to make sure both the old and new title are NOT the same
+						if(oldContent === newContent) {
+							contentChanges = false;
+						}
+						
+						// Test statements for the old content and new content
+						// console.log(oldContent);
+						// console.log(newContent);
+						// console.log(contentChanges);
+						
+						//If the content doesn't change, the test fails.
 						expect(contentChanges).toBe(true);
 						done();
-					}
-				});
-				
-				afterAll(function() {
-					window.loadFeed(0);
+					}, 400); // 400 MS seems to be an ideal time to make sure that the content has time to actually appear onto the page.
 				});
 		});
 }());
