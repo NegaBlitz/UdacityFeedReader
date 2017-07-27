@@ -7,7 +7,6 @@
  * since some of these tests may require DOM elements. We want
  * to ensure they don't run until the DOM is ready.
  */
-'use strict';
 $(function() {
     /* This is our first test suite - a test suite just contains
      * a related set of tests. This suite is all about the RSS
