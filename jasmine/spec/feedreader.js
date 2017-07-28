@@ -57,7 +57,7 @@ $(function() {
          * hiding/showing of the menu element.
          */
         it('has menu element hidden by default', function() {
-            expect(document.body.className).toBe('menu-hidden');
+            expect(document.body.classList.contains('menu-hidden')).toBe(true);
         });
 
         /* A test that ensures the menu changes
@@ -68,16 +68,19 @@ $(function() {
         var menuIcon = $('.menu-icon-link');
 
         it('changes visibility when icon is clicked', function() {
-            // Runs when the menu icon is clicked
-            menuIcon.on('click', function() {
-                // If the menu is hidden, then it should appear, if not, then it should disappear.
-                if (document.body.className == 'menu-hidden') {
-                    expect(document.body.className).not.toBe('menu-hidden');
-                } else {
-                    expect(document.body.className).toBe('menu-hidden');
-                }
-            });
-            expect(document.body).toBeDefined();
+					
+						// Initial state of menu icon is invisible, as tested above,
+						// so we can expect clicking twice to cause it to appear and then vanish.						
+						// Clicks the menu icon
+						menuIcon.click();
+						expect(document.body.classList.contains('menu-hidden')).toBe(false);
+						console.log(document.body.classList.contains('menu-hidden'));
+						
+						// Clicks the menu icon again, which should toggle it back
+						menuIcon.click();
+						expect(document.body.classList.contains('menu-hidden')).toBe(true);
+						console.log(document.body.classList.contains('menu-hidden'));
+						
         });
     });
 
@@ -96,8 +99,8 @@ $(function() {
          * a single .entry element within the .feed container.
          */
         it('has at least a single .entry element within the .feed container when loadFeed is called', function(done) {
-            var entry = $('.entry');
-            expect(entry).toBeDefined();
+            var entry = $('.feed .entry').length;
+            expect(entry).not.toBe(0);
             done();
         });
     });
@@ -125,16 +128,16 @@ $(function() {
         it('has content change when a new feed is loaded by the loadFeed function', function(done) {
 
             //The old title of the initial feed
-            oldContent = $(".header-title").html();
+            oldContent = $('.feed').html();;
 
             //Triggers a click
             $("a[data-id='1']").trigger("click");
 
-            //Timeouts a little to ensure a change has time to happen, and then checks and compares the old and new together
-            window.setTimeout(function() {
+            //Loads the next feed an compares the content
+            loadFeed(1, function() {
 
                 // Gets what should be the new title
-                newContent = $(".header-title").html();
+                newContent = $('.feed').html();;
 
                 // Runs a check to make sure both the old and new title are NOT the same
                 if (oldContent === newContent) {
@@ -149,7 +152,7 @@ $(function() {
                 //If the content doesn't change, the test fails.
                 expect(contentChanges).toBe(true);
                 done();
-            }, 400); // 400 MS seems to be an ideal time to make sure that the content has time to actually appear onto the page.
+            });
         });
     });
 }());
