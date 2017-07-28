@@ -128,7 +128,7 @@ $(function() {
         it('has content change when a new feed is loaded by the loadFeed function', function(done) {
 
             //The old title of the initial feed
-            oldContent = $('.feed').html();;
+            oldContent = $('.feed').html();
 
             //Triggers a click
             $("a[data-id='1']").trigger("click");
@@ -137,7 +137,7 @@ $(function() {
             loadFeed(1, function() {
 
                 // Gets what should be the new title
-                newContent = $('.feed').html();;
+                newContent = $('.feed').html();
 
                 // Runs a check to make sure both the old and new title are NOT the same
                 if (oldContent === newContent) {
